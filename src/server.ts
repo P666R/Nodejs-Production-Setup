@@ -1,26 +1,25 @@
-/* eslint-disable no-console */
 import app from './app';
 import config from './config/config';
+import logger from './util/logger';
 
-const server = app.listen(config.PORT);
+const server = app.listen(config.PORT, () => {
+    logger.info('APPLICATION_STARTED', {
+        meta: {
+            PORT: config.PORT,
+            SERVER_URL: config.SERVER_URL
+        }
+    });
+});
 
-// eslint-disable-next-line @typescript-eslint/require-await
-void (async () => {
-    try {
-        console.info('Application started', {
-            meta: {
-                PORT: config.PORT,
-                SERVER_URL: config.SERVER_URL
-            }
-        });
-    } catch (err) {
-        console.error('Application error', { meta: err });
+const handleError = (err: Error) => {
+    logger.error('APPLICATION_ERROR', { meta: err });
+    server.close((error) => {
+        if (error) {
+            logger.error('Application error', { meta: error });
+        }
+        process.exit(1);
+    });
+};
 
-        server.close((error) => {
-            if (error) {
-                console.error('Application error', { meta: error });
-            }
-            process.exit(1);
-        });
-    }
-})();
+process.on('unhandledRejection', handleError);
+process.on('uncaughtException', handleError);
