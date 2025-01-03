@@ -11,11 +11,11 @@ const server = app.listen(config.PORT, () => {
     });
 });
 
-const handleError = (err: Error) => {
-    logger.error('APPLICATION_ERROR', { meta: err });
+const handleError = (error: Error) => {
+    logger.error('APPLICATION_ERROR', { meta: error });
     server.close((error) => {
         if (error) {
-            logger.error('Application error', { meta: error });
+            logger.error('APPPLICATION_ERROR', { meta: error });
         }
         process.exit(1);
     });

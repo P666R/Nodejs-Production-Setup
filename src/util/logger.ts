@@ -5,6 +5,10 @@ import { red, blue, yellow, green, magenta } from 'colorette';
 import { ConsoleTransportInstance, FileTransportInstance } from 'winston/lib/winston/transports';
 import config from '../config/config';
 import { EApplicationEnvironment } from '../constant/application';
+import * as sourceMapSupport from 'source-map-support';
+
+// Linking trace support
+sourceMapSupport.install();
 
 const colorizeLevel = (level: string): string => {
     const colors: Record<string, (text: string) => string> = {
